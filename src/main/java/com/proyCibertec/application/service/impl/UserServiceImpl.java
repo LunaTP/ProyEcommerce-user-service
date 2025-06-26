@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +77,22 @@ public class UserServiceImpl implements UserService {
         }
 
         return new UserLoginResponseDto(user.getRol().name());
+    }
+
+    @Override
+    public UserResponseDto getUsuarioByEmail(String email) {
+        Optional<User> optional = repository.findByEmail(email);
+        if (optional.isEmpty()) {
+            return null;
+        }
+
+        User user = optional.get();
+        return new UserResponseDto(
+                user.getId(),
+                user.getNombre(),
+                user.getEmail(),
+                user.getContrasenia(),
+                user.getRol().name());
     }
 
 }

@@ -13,5 +13,6 @@ public interface UserService {
     void delete(Long id);
     List<UserResponseDto> getAll();
     UserLoginResponseDto login(String email, String contrasenia);
+    UserResponseDto getUsuarioByEmail(String email);
 
 }

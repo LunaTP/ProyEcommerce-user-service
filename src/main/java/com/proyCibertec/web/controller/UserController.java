@@ -20,7 +20,9 @@ public class UserController {
 
     @PostMapping("/crear")
     public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto dto) {
+        System.out.println("DTO recibido: " + dto);
         UserResponseDto response = userService.create(dto);
+
         return ResponseEntity.ok(response);
     }
 
@@ -53,6 +55,11 @@ public class UserController {
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto dto) {
         UserLoginResponseDto response = userService.login(dto.getEmail(), dto.getContrasenia());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getUserBySession")
+    public Object getUsuarioForSession(@RequestParam(name = "email", required = false) String email){
+        return userService.getUsuarioByEmail(email);
     }
 
 }
