@@ -21,6 +21,7 @@ public class UserController {
     @PostMapping("/crear")
     public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto dto) {
         System.out.println("DTO recibido: " + dto);
+
         UserResponseDto response = userService.create(dto);
 
         return ResponseEntity.ok(response);

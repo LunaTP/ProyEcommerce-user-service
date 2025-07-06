@@ -2,6 +2,6 @@ CREATE TABLE usuarios (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    contrasenia VARCHAR(50) NOT NULL,
+    contrasenia VARCHAR(500) NOT NULL,
     rol VARCHAR(50) NOT NULL
 );

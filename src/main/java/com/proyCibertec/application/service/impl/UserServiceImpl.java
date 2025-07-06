@@ -9,6 +9,7 @@ import com.proyCibertec.web.dto.UserLoginResponseDto;
 import com.proyCibertec.web.dto.UserRequestDto;
 import com.proyCibertec.web.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
-
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDto getById(Long id) {
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto create(UserRequestDto dto) {
+        String hashedPassword = passwordEncoder.encode(dto.getContrasenia());
+        dto.setContrasenia(hashedPassword);
+
         User user = mapper.toEntity(dto);
         return mapper.toResponseDto(repository.save(user));
     }
@@ -42,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 new RuntimeException("User no encontrado"));
 
         existingUser.setNombre(dto.getNombre());
-        existingUser.setContrasenia(dto.getContrasenia());
+        existingUser.setContrasenia(passwordEncoder.encode(dto.getContrasenia()));
         existingUser.setEmail(dto.getEmail());
         existingUser.setRol(RolUser.valueOf(dto.getRol()));
 
@@ -72,7 +76,8 @@ public class UserServiceImpl implements UserService {
         User user = repository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!user.getContrasenia().equals(contrasenia)) {
+        // Comparar con BCrypt
+        if (!passwordEncoder.matches(contrasenia, user.getContrasenia())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
